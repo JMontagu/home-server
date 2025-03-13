@@ -27,5 +27,6 @@ network_config:
       type: camera
 
   dns:
-    primary: 1.1.1.2
-    secondary: 1.0.0.2
+    # Use PiHole running on Bahay Server for DNS
+    primary: 192.168.86.5
+    secondary:
