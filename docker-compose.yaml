@@ -12,29 +12,46 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /opt/portainer:/data
 
-  homeassistant:
-    container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:stable
-    volumes:
-      - /opt/homeassistant/config:/config
-      - /etc/localtime:/etc/localtime:ro
-    restart: unless-stopped
-    privileged: true
-    network_mode: host
-
   scrypted:
     container_name: scrypted
     image: koush/scrypted
     restart: unless-stopped
     ports:
-      - 10443:10443
+      - "10443:10443"
     environment:
       - TZ=Australia/Melbourne
+      - SCRYPTED_DOCKER_AVAHI=true
     volumes:
       - /opt/scrypted:/server/volume
     network_mode: host
 
-  watchtower:
-    image: containrrr/watchtower
+  homebridge:
+    image: homebridge/homebridge:latest
+    restart: always
+    network_mode: host
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./volumes/homebridge:/homebridge
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      # DNS Ports
+      - "53:53/tcp"
+      - "53:53/udp"
+      # Default HTTP Port
+      - "80:80/tcp"
+      # Default HTTPs Port. FTL will generate a self-signed certificate
+      - "443:443/tcp"
+    environment:
+      TS: "Australia/Melbourne"
+      FTLCONF_dns_listeningMode: 'all'
+    volumes:
+      # For persisting Pi-hole's databases and common configuration file
+      - './etc-pihole:/etc/pihole'
+    restart: unless-stopped
