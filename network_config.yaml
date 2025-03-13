@@ -1,0 +1,31 @@
+---
+network_config:
+  router:
+    ip: 192.168.86.1
+    subnet_mask: 255.255.255.0
+
+  dhcp_pool:
+    start: 192.168.86.20
+    end: 192.168.86.250
+
+  ip_reservations:
+    - name: TL-SG108PE Switch
+      mac_address: 30:68:93:1E:19:B7
+      ip_address: 192.168.86.2
+      type: switch
+    - name: Bahay Server
+      mac_address: c0:25:a5:6b:5e:a6
+      ip_address: 192.168.86.5
+      type: computer
+    - name: Driveway
+      mac_address: EC:71:DB:72:43:1C
+      ip_address: 192.168.86.11
+      type: camera
+    - name: Backyard
+      mac_address: EC:71:DB:06:15:3C
+      ip_address: 192.168.86.12
+      type: camera
+
+  dns:
+    primary: 1.1.1.2
+    secondary: 1.0.0.2
