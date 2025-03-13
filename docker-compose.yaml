@@ -1,0 +1,40 @@
+---
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: always
+    ports:
+      - 9000:9000/tcp
+    environment:
+      - TZ=Australia/Melbourne
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/portainer:/data
+
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - /opt/homeassistant/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+
+  scrypted:
+    container_name: scrypted
+    image: koush/scrypted
+    restart: unless-stopped
+    ports:
+      - 10443:10443
+    environment:
+      - TZ=Australia/Melbourne
+    volumes:
+      - /opt/scrypted:/server/volume
+    network_mode: host
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
