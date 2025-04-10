@@ -3,31 +3,30 @@ services:
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
-    restart: always
-    ports:
-      - 9000:9000/tcp
+    restart: unless-stopped
     environment:
-      - TZ=Australia/Melbourne
+      - TZ
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /opt/portainer:/data
 
   scrypted:
     container_name: scrypted
-    image: koush/scrypted
+    image: "koush/scrypted"
     restart: unless-stopped
     ports:
       - "10443:10443"
     environment:
-      - TZ=Australia/Melbourne
+      - TZ
       - SCRYPTED_DOCKER_AVAHI=true
     volumes:
-      - /opt/scrypted:/server/volume
+      - /etc/scrypted:/server/volume
     network_mode: host
 
   homebridge:
+    container_name: homebridge
     image: homebridge/homebridge:latest
-    restart: always
+    restart: unless-stopped
     network_mode: host
     volumes:
       - ./volumes/homebridge:/homebridge
@@ -36,7 +35,20 @@ services:
       options:
         max-size: "10mb"
         max-file: "1"
-
+  
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - /etc-homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    environment:
+      - TZ
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+  
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
@@ -44,14 +56,39 @@ services:
       # DNS Ports
       - "53:53/tcp"
       - "53:53/udp"
-      # Default HTTP Port
-      - "80:80/tcp"
-      # Default HTTPs Port. FTL will generate a self-signed certificate
-      - "443:443/tcp"
     environment:
-      TS: "Australia/Melbourne"
+      TS: TZ
       FTLCONF_dns_listeningMode: 'all'
     volumes:
       # For persisting Pi-hole's databases and common configuration file
       - './etc-pihole:/etc/pihole'
+    restart: always
+      
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginxproxymanager
     restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+  ddclient:
+    image: lscr.io/linuxserver/ddclient:latest
+    container_name: ddclient
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ
+      - CLOUDFLARE_API_TOKEN
+    volumes:
+      - ./ddclient.conf:/config/ddclient.conf
+    restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: bahay
