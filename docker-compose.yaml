@@ -1,5 +1,6 @@
 ---
 services:
+  # Container management
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
@@ -10,6 +11,21 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /opt/portainer:/data
 
+  # Adblocking
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    restart: always
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    environment:
+      TS: TZ
+      FTLCONF_dns_listeningMode: 'all'
+    volumes:
+      - './etc-pihole:/etc/pihole'
+
+  # Smart home
   scrypted:
     container_name: scrypted
     image: "koush/scrypted"
@@ -48,22 +64,84 @@ services:
     restart: unless-stopped
     privileged: true
     network_mode: host
-  
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
-    ports:
-      # DNS Ports
-      - "53:53/tcp"
-      - "53:53/udp"
+
+  # Media
+  plex:
+    image: plexinc/pms-docker:latest
+    container_name: plex
     environment:
-      TS: TZ
-      FTLCONF_dns_listeningMode: 'all'
+      - PUID
+      - PGID
+      - TZ
+      - ADVERTISE_IP
+      - PLEX_CLAIM
     volumes:
-      # For persisting Pi-hole's databases and common configuration file
-      - './etc-pihole:/etc/pihole'
-    restart: always
-      
+      - /etc/localtime:/etc/localtime:ro
+      - ./plexmediaserver:/config
+      - /mnt/media:/mnt/media
+    devices:
+      - /dev/dri:/dev/dri
+    restart: unless-stopped
+    network_mode: host
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    volumes:
+      - /etc-sonarr/data:/config
+      - /mnt/media:/mnt/media
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    volumes:
+      - /etc-sonarr/data:/config
+      - /mnt/media:/mnt/media
+    restart: unless-stopped
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    volumes:
+      - /etc-sabnzbd/config:/config
+      - /mnt/media:/mnt/media
+    restart: unless-stopped
+
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ
+    volumes:
+      - /etc-overseerr/config:/app/config
+    restart: unless-stopped
+
+  tautulli:
+    image: ghcr.io/tautulli/tautulli
+    container_name: tautulli
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    volumes:
+      - /etc-tautulli/config:/config
+    restart: unless-stopped
+
+  # Networking
   nginx:
     image: 'jc21/nginx-proxy-manager:latest'
     container_name: nginxproxymanager
@@ -80,8 +158,8 @@ services:
     image: lscr.io/linuxserver/ddclient:latest
     container_name: ddclient
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID
+      - PGID
       - TZ
       - CLOUDFLARE_API_TOKEN
     volumes:
