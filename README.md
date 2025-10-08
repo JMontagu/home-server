@@ -31,7 +31,7 @@ Defines network topology to be manually applied
 ## Services
 ### [ddclient](https://ddclient.net/)
 Automatically syncs this servers IP address with Cloudflare so we can host public services off jademontagu.com:
-1. Log into Cloudflare Dashboard
+1. Log into [Cloudflare Dashboard](https://dash.cloudflare.com/login)
     1. Go to "My Profile" → "API Tokens"
     2. Create a token with "Zone:Zone:Read" and "Zone:DNS:Edit" permissions for your domain
 2. `sudo nano /etc/environment`
