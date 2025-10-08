@@ -15,3 +15,13 @@ Configs etc for my home network/server
     - `ping -c 4 192.168.86.1`
     - `ping -c 4 8.8.8.8`
 4. `sudo netplan apply`
+
+### [Network Config](https://github.com/JMontagu/home-server/blob/main/network_config.yaml)
+
+Defines network topology to be manually applied
+
+### Docker
+
+1. Install docker [using official instructions](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+2. Pull docker-compose: `sudo curl -o docker-compose.yaml https://raw.githubusercontent.com/JMontagu/home-server/refs/heads/main/docker-compose.yaml`
+3. Run containers: `sudo docker compose up -d`
