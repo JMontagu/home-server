@@ -1,0 +1,20 @@
+# List of CNAME records which indicate that <cname> is really <target>. If the <TTL> is
+# given, it overwrites the value of local-ttl
+#
+# Possible values are:
+#     Array of CNAMEs each on in one of the following forms: "<cname>,<target>[,<TTL>]"
+cnameRecords = [
+  "nginx.home.arpa,home.arpa",
+  "portainer.home.arpa,home.arpa",
+  "plex.home.arpa,home.arpa",
+  "bazarr.home.arpa,home.arpa",
+  "homebridge.home.arpa,home.arpa",
+  "overseerr.home.arpa,home.arpa",
+  "pihole.home.arpa,home.arpa",
+  "radarr.home.arpa,home.arpa",
+  "sabnzbd.home.arpa,home.arpa",
+  "scrypted.home.arpa,home.arpa",
+  "tautulli.home.arpa,home.arpa",
+  "driveway.camera.home.arpa,home.arpa",
+  "backyard.camera.home.arpa,home.arpa"
+] ### CHANGED, default = []
