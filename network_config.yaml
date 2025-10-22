@@ -25,6 +25,10 @@ network_config:
       mac_address: EC:71:DB:06:15:3C
       ip_address: 192.168.86.12
       type: camera
+    - name: Front Door
+      mac_address: ec:71:db:03:e5:90
+      ip_address: 192.168.86.13
+      type: doorbell_camera
 
   dns:
     # Use PiHole running on Bahay Server for DNS
