@@ -29,6 +29,10 @@ network_config:
       mac_address: ec:71:db:03:e5:90
       ip_address: 192.168.86.13
       type: doorbell_camera
+    - name: Guest Bedroom Split Unit
+      mac_address: 34:90:EA:BA:CD:CE
+      ip_address: 192.168.86.16
+      type: split_unit
 
   dns:
     # Use PiHole running on Bahay Server for DNS
