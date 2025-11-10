@@ -33,6 +33,10 @@ network_config:
       mac_address: 34:90:EA:BA:CD:CE
       ip_address: 192.168.86.16
       type: split_unit
+    - name: Kids Bedroom Split Unit
+      mac_address: 34:90:EA:AE:6D:0A
+      ip_address: 192.168.86.17
+      type: split_unit
 
   dns:
     # Use PiHole running on Bahay Server for DNS
