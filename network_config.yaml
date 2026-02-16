@@ -8,27 +8,74 @@ network_config:
     start: 192.168.86.20
     end: 192.168.86.250
 
+  security_vlan:
+    id: 10
+    subnet: 192.168.10.0/24
+    gateway: 192.168.10.5 # Bahay Server acts as Gateway and NTP for devices on this vlan
+
   ip_reservations:
     - name: TL-SG108PE Switch
       mac_address: 30:68:93:1E:19:B7
       ip_address: 192.168.86.2
       type: switch
-    - name: Bahay Server
+      vlan:
+        type: 802.1Q
+        configuration:
+          - id: 1
+            name: Default
+            member_ports: [5,6,7,8]
+            tagged_ports: []
+            untagged_ports: [5,6,7,8]
+          - id: 10
+            name: Security
+            member_ports: [1,2,3,4,7]
+            tagged_ports: [7]
+            untagged_ports: [1,2,3,4]
+      pvid:
+        - port: 1
+          pvid: 10
+        - port: 2
+          pvid: 10
+        - port: 3
+          pvid: 10
+        - port: 4
+          pvid: 10
+        - port: 5
+          pvid: 1
+        - port: 6
+          pvid: 1
+        - port: 7
+          pvid: 1
+        - port: 8
+          pvid: 1
+    - name: Bahay Server (LAN)
       mac_address: c0:25:a5:6b:5e:a6
       ip_address: 192.168.86.5
       type: computer
+      port: 7
+      interfaces:
+        - name: Primary (LAN)
+          ip_address: 192.168.86.5
+          vlan: 1
+        - name: Security (VLAN)
+          ip_address: 192.168.10.5
+          vlan: 10
+          role: gateway_ntp
     - name: Driveway
       mac_address: EC:71:DB:72:43:1C
-      ip_address: 192.168.86.11
+      ip_address: 192.168.10.11
       type: camera
+      vlan: 10
     - name: Backyard
       mac_address: EC:71:DB:06:15:3C
-      ip_address: 192.168.86.12
+      ip_address: 192.168.10.12
       type: camera
+      vlan: 10
     - name: Front Door
       mac_address: ec:71:db:03:e5:90
-      ip_address: 192.168.86.13
+      ip_address: 192.168.10.13
       type: doorbell_camera
+      vlan: 10
     - name: Guest Bedroom Split Unit
       mac_address: 34:90:EA:BA:CD:CE
       ip_address: 192.168.86.16
@@ -41,4 +88,4 @@ network_config:
   dns:
     # Use PiHole running on Bahay Server for DNS
     primary: 192.168.86.5
-    secondary:
+    secondary: 1.1.1.1 # Cloudflare fallback
