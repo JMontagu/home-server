@@ -8,6 +8,7 @@ cnameRecords = [
   "portainer.home.arpa,home.arpa",
   "plex.home.arpa,home.arpa",
   "bazarr.home.arpa,home.arpa",
+  "changedetection.home.arpa,home.arpa",
   "homebridge.home.arpa,home.arpa",
   "overseerr.home.arpa,home.arpa",
   "pihole.home.arpa,home.arpa",
@@ -16,5 +17,8 @@ cnameRecords = [
   "scrypted.home.arpa,home.arpa",
   "tautulli.home.arpa,home.arpa",
   "driveway.camera.home.arpa,home.arpa",
-  "backyard.camera.home.arpa,home.arpa"
+  "backyard.camera.home.arpa,home.arpa",
+  "homeassistant.home.arpa,home.arpa",
+  "frontdoor.camera.home.arpa,home.arpa",
+  "zigbee.home.arpa,home.arpa"
 ] ### CHANGED, default = []
